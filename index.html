@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>My most beautiful Nightmare - by where the road ends</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+	<body>
+
+		<h1>My most beautiful Nightmare</h1>
+		<img class="logo logoIntro" src="ui/my_most_beautiful_nightmare.svg"/>
+		<div class="infos">
+			<p>What is your most memorable dream ?<br/>
+			Browse throught those worlds of digital poetry and discover the beautiful stories you brain want to talk about.</p>
+			<a href="#" class="start link">Launch the prototype</a>
+		</div>
+		<div class="credits disappear">
+			<h2>Where the Road Ends</h2>
+			<img src="ui/roadEnds.svg"/>
+		</div>
+		<div id="container"></div>
+		<div id="center"><div class="name"><a class="nameDisappear link" href="#">He's looking at me</a></div></div>
+		<div id="left"></div>
+		<div id="right"></div>
+		<div class="leavingLayer off"></div>
+		
+
+
+		<script src="js/build/three.min.js"></script>
+		<script src="js/libs/collada/Animation.js"></script>
+		<script src="js/libs/collada/AnimationHandler.js"></script>
+		<script src="js/libs/collada/KeyFrameAnimation.js"></script>
+		<script src="js/libs/collada/ColladaLoader.js"></script>
+		<script src="js/build/TweenLite.min.js"></script>
+		<script src="js/build/jquery-3.1.1.min.js"></script>
+		<script src="js/libs/stats.min.js"></script>
+		<script src="js/libs/dat.gui.min.js"></script>
+		<script src="scenes/scene1/scene.js"></script>
+		<script src="scenes/scene2/scene.js"></script>
+		<script src="scenes/scene3/scene.js"></script>
+		<script src="scenes/scene4/scene.js"></script>
+		<script src="rooms/rooms.js"></script>
+		<script src="js/crossfade/gui.js"></script>
+		<script src="js/crossfade/transition.js"></script>
+
+		<script src="js/libs/howler.core.js"></script>
+
+		<script>
+
+			var container, stats;
+			var renderer;
+			var transition;
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+
+			var color = 1;
+
+			var navigation = {value:0, step:0, spacing:180, time:0.9, scenes:4, inside:false};
+			
+			var clock = new THREE.Clock();
+
+			// AUDIO
+			loopNight = new Howl({ src: ['scenes/scene1/audio/loopNight.mp3'],html5: true, loop: true, });	
+			transitionDay = new Howl({ src: ['scenes/scene1/audio/transitionDay.mp3'],html5: true });	
+			transitionNight = new Howl({ src: ['scenes/scene1/audio/transitionNight.mp3'],html5: true });
+			loopNight.volume(0);	
+			//loopNight.play();
+
+			// MOUSE EVENTS
+			var mouseX =0
+			var mouseY =0
+			var globalCameraPositionX = 0 
+			var globalCameraPositionY = 470
+			function onDocumentMouseMove(event) {
+				mouseX = ( event.clientX - windowHalfX ) * 1;
+				mouseY = ( event.clientY - windowHalfY ) * 1;
+			}
+			var transitionTime = {value:1, time:0.6}
+			
+
+			// TEXT APPEAR / DISAPPEAR
+			$("#center").mouseenter(function() {
+				if (navigation.inside == false && navigation.step == 1){
+					$(".name a").text("Paralysed");
+					transition = new Transition(scene0,sceneA);
+				 	$(".name a").removeClass("nameDisappear");
+				}
+				else if (navigation.inside == false && navigation.step == 2){
+					$(".name a").text("Lost in Acid");
+					transition = new Transition(scene0,sceneB);
+				 	$(".name a").removeClass("nameDisappear");
+				}
+				else if (navigation.inside == false && navigation.step == 3){
+					$(".name a").text("He's looking at me");
+					transition = new Transition(scene0,sceneC);
+				 	$(".name a").removeClass("nameDisappear");
+				}
+				else if (navigation.inside == false && navigation.step == 4){
+					$(".name a").text("Interstellar");
+					transition = new Transition(scene0,sceneD);
+				 	$(".name a").removeClass("nameDisappear");
+				}
+			});
+			$("#center").mouseleave(function() {
+ 				$(".name a").addClass("nameDisappear");
+			});
+			// CLICK ON THE NAME TO OPEN
+			$(".name a").click(function() {
+				if (transitionTime.value==1){
+ 					console.log( "CLICK" );
+ 					$(".name a").addClass("nameDisappear");
+ 					startTransition();
+ 					$(".leavingLayer").removeClass("off");
+ 				}
+			});
+			// BIG LAYER TO LEAVE
+			$(".leavingLayer").click(function() {
+				if (transitionTime.value==0){
+ 					console.log( "CLICK" );
+ 					startTransition();
+ 					$(".leavingLayer").addClass("off");
+ 				}
+			});
+
+			function startTransition() {
+ 				if (transitionTime.value==0){
+ 					navigation.inside = false;
+ 					loopNight.fade(1, 0, 700);
+ 					function explode(){
+					 	loopNight.pause();
+					}
+					setTimeout(explode, 700);
+ 					transitionDay.play();
+ 					TweenLite.to(transitionTime, transitionTime.time, {value:"1", ease:Linear.easeNone});
+ 				}
+ 				else if (transitionTime.value==1){
+ 					navigation.inside = true;
+ 					transitionNight.play();
+ 					loopNight.play();
+ 					loopNight.fade(0, 1, 700);
+ 					TweenLite.to(transitionTime, transitionTime.time, {value:"0", ease:Linear.easeNone});
+ 				}
+			};
+			$(".start").click(function() {
+				$(".infos").addClass("disappear");
+				$(".logo").removeClass("logoIntro");
+				$(".logo").addClass("logoContent");
+				navigation.step +=1
+ 				console.log( "Right" );
+ 				var tweento = navigation.spacing * -navigation.step
+ 				TweenLite.to(navigation, navigation.time, {value:tweento, ease:Power4.easeOut});
+ 			});
+ 			$("#right").click(function() {
+ 				if (navigation.step < navigation.scenes && !navigation.inside){
+					$(".infos").addClass("disappear");
+					$(".logo").removeClass("logoIntro");
+					$(".logo").addClass("logoContent");
+					navigation.step +=1
+ 					console.log( "Right" );
+ 					var tweento = navigation.spacing * -navigation.step
+ 					TweenLite.to(navigation, navigation.time, {value:tweento, ease:Power4.easeOut});
+ 				} else if (navigation.step == navigation.scenes && !navigation.inside){
+ 					$(".credits").removeClass("disappear");
+					navigation.step +=1
+					console.log( "CREDITS" );
+					var tweento = navigation.spacing * -navigation.step
+ 					TweenLite.to(navigation, navigation.time, {value:tweento, ease:Power4.easeOut});
+ 				}
+ 			});
+ 			$("#left").click(function() {
+				if (navigation.step > 1 && !navigation.inside){
+					if (navigation.step > navigation.scenes){
+ 						$(".credits").addClass("disappear");
+ 					}
+					navigation.step -=1
+ 					console.log( "Left" );
+ 					var tweento = navigation.spacing * -navigation.step
+ 					TweenLite.to(navigation, navigation.time, {value:tweento, ease:Power4.easeOut});
+ 				}
+ 			});
+ 			$(".logo").click(function() {
+ 				$(".credits").addClass("disappear");
+				if (navigation.step != 0 && !navigation.inside){
+					$(".infos").removeClass("disappear");
+					$(".logo").removeClass("logoContent");
+					$(".logo").addClass("logoIntro");
+					navigation.step = 0
+ 					console.log( "logo" );
+ 					var tweento = navigation.spacing * -navigation.step
+ 					TweenLite.to(navigation, navigation.time, {value:tweento, ease:Power4.easeOut});
+ 				} else if (navigation.inside){
+ 					startTransition()
+ 				}
+ 			});
+ 			$("a").hover(function() {
+				color = 1 + Math.floor(Math.random() * 6);
+ 			});
+
+ 			setInterval(function() {
+				var color = 1 + Math.floor(Math.random() * 6);
+				if ($('a:hover').length != 0) {
+						   if (color ==1) {$("a").css("background-color", "#392b39");
+					} else if (color ==2) {$("a").css("background-color", "#2b3439");
+					} else if (color ==3) {$("a").css("background-color", "#2b3739");
+					} else if (color ==4) {$("a").css("background-color", "#372c23");
+					} else if (color ==5) {$("a").css("background-color", "#372337");
+					} else if (color ==6) {$("a").css("background-color", "#2c3723");
+					} 
+				} else { $("a").css("background-color", "#312e31"); }
+			},
+			20);
+				
+			
+			document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+			//
+			init();
+			animate();
+			
+			function init() {
+
+				initGUI();
+				
+				container = document.getElementById( "container" );
+				// we can remove the alpha = true
+				renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.sortObjects = false;
+				container.appendChild( renderer.domElement );
+
+				stats = new Stats();
+				//container.appendChild( stats.dom );
+
+				// SCENES 1
+				
+				scene0 = new SceneDay();
+				sceneA = new SceneOne();
+				sceneB = new SceneTwo();
+				sceneC = new SceneThree();
+				sceneD = new SceneFour();
+				transition = new Transition(scene0,sceneA);
+				
+			}
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+				stats.update();
+
+			}
+			
+			function render() {
+				
+				transition.render( clock.getDelta() );
+				
+			}
+
+		</script>
+
+	</body>
+	
+</html>

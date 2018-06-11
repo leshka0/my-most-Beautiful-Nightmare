@@ -1,0 +1,136 @@
+@font-face {
+    font-family: "insigne";
+    src: url("../ui/fonts/insigne-Ainslie-NorReg.otf");
+}
+.logo {
+	position: absolute;
+	z-index: 99;
+	color: white;
+	font-size: 2em;
+	text-align: center;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+.logoIntro{
+	height: 20vh;
+	left: 13vw;
+	top: calc((100vh - 400px)/2);
+}
+.logoContent {
+	height: 8vh;
+	left: 3vw;
+	top: 3vw;
+	cursor: pointer;
+}
+.infos {
+	font-size: 1.25em;
+	line-height: 1.5em;
+	z-index: 15;
+	position: absolute;
+	left: 13vw;
+	top: calc((100vh - 400px)/2);
+	padding-top: 20vh;
+	width: calc(100vw - 13vw - 40vw);
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+.credits {
+	z-index: 15;
+	position: absolute;
+	left: 30vw;
+	right: 30vw;
+	text-align: center;
+	top: calc((100vh - 150px)/2);
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+.credits img{
+	width: 200px;
+}
+p{
+	margin-bottom: 3em;
+	color: #555555
+}
+.link{
+	color: #ffffff;
+	background-color: #312e31;
+	padding: 1em;
+	box-shadow: 0px -5px 0px #403f40;
+	text-decoration: none;
+	transition: opacity 0.2s ease, padding 0.2s ease;
+}
+.name {
+	font-size: 1.25em;
+	opacity: 1;
+	line-height: 1.5em;
+	z-index: 17;
+	position: absolute;
+	text-align: center;
+	left: 0;
+	right: 0;
+	top: calc((50% - 1em));
+	cursor: pointer;
+	
+}
+#container {
+	z-index: 1;
+}
+
+h1{display:none;}
+h2{display:none;}
+.start{
+	z-index: 15;
+}
+.disappear{
+	opacity: 0;
+	z-index: 5;
+}
+.off{
+	display: none;
+}
+.nameDisappear{
+	opacity: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.leavingLayer{
+	position: absolute;
+	z-index: 20;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+}
+#center {
+	z-index: 10;
+	position: absolute;
+	top: 20vh;
+	bottom: 20vh;
+	left: 33vw;
+	right: 33vw;
+	cursor: pointer;
+}
+#left {
+	z-index: 10;
+	position: absolute;
+	top: 20vh;
+	bottom: 20vh;
+	left: 0;
+	width: 28vw;
+	cursor: pointer;
+}
+#right {
+	z-index: 10;
+	position: absolute;
+	top: 20vh;
+	bottom: 20vh;
+	width: 28vw;
+	right: 0;
+	cursor: pointer;
+}
+body{
+    font-family: "insigne";
+	background-color: #333333;
+	color: #ffffff;
+	margin: 0px;
+}
